@@ -1,3 +1,4 @@
+//src/infrastructure/repository/sensor_status_repository.go
 package repository
 
 import (

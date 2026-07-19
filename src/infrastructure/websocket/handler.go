@@ -1,3 +1,4 @@
+//src/infrastructure/websocket/handler.go
 // Package websocket es el adaptador de transporte del endpoint
 // GET /ws/lotes/{id}: sube la conexión a WebSocket, hace ping/pong, y
 // escribe los mensajes que le da application.GatewayService — no valida

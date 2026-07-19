@@ -1,3 +1,4 @@
+//src/infrastructure/dependencies/container.go
 // Package dependencies arma (wiring) todas las piezas del Gateway.
 package dependencies
 

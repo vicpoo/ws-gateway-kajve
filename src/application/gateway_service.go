@@ -1,3 +1,4 @@
+//src/application/gateway_service.go
 // Package application contiene la orquestación del hexágono: no sabe nada
 // de HTTP ni de WebSockets (eso vive en infrastructure/websocket), solo
 // conoce los puertos definidos en domain. Mismo criterio que

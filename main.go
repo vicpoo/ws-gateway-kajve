@@ -1,3 +1,4 @@
+//main.go
 // WebSocket Gateway — kajve.
 //
 // Autentica al cliente por el mismo JWT que emite api-mobile, verifica que

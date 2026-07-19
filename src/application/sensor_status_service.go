@@ -1,3 +1,4 @@
+//src/application/sensor_status_service.go
 package application
 
 import (

@@ -1,3 +1,4 @@
+//src/infrastructure/auth/jwt.go
 // Package auth valida los JWT que ya emite api-mobile. Este servicio nunca
 // firma tokens, solo los valida — deben usar exactamente el mismo secreto
 // HS256 que api-mobile (config.JWTSecret allá, en

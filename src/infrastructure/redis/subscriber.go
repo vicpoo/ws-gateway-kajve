@@ -1,3 +1,4 @@
+//src/infrastructure/redis/subscriber.go
 // Package redis se suscribe al canal de tiempo real que publica
 // ingesta-iot (ver infrastructure/redis/publisher.go allá).
 package redis

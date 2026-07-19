@@ -1,3 +1,4 @@
+//src/core/db.go
 // Package core contiene la conexión a Postgres, compartido por los
 // repositorios de infrastructure. Mismo patrón que ingesta-iot/src/core.
 package core

@@ -1,3 +1,4 @@
+//src/domain/interface.go
 // Package domain define los puertos (interfaces) que implementa
 // infrastructure, siguiendo el mismo patrón hexagonal que ingesta-iot.
 package domain

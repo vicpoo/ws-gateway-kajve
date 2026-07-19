@@ -1,3 +1,4 @@
+//src/infrastructure/httpapi/sensor_status_handler.go
 // Package httpapi contiene los endpoints REST normales del Gateway (no
 // WebSocket) — separado de infrastructure/websocket porque la
 // autenticación aquí va por header Authorization, no por query param.
