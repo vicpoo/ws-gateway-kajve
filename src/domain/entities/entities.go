@@ -42,3 +42,23 @@ type Lote struct {
 	ID        int
 	UsuarioID int
 }
+
+// EstadoSensor resume si un sensor del usuario está "conectado" (mandó una
+// lectura hace poco) o "desconectado" (no ha mandado nada en el umbral
+// configurado). No depende de sensores.ultima_conexion (esa columna no se
+// actualiza en cada mensaje) — se deriva directamente de la lectura más
+// reciente en lecturas_ambientales, que es la fuente de verdad real.
+type EstadoSensor struct {
+	SensorID      int        `json:"sensor_id"`
+	MacAddress    string     `json:"mac_address"`
+	Tipo          string     `json:"tipo"`
+	LoteID        int        `json:"lote_id"`
+	NombreLote    string     `json:"nombre_lote"`
+	Conectado     bool       `json:"conectado"`
+	UltimaLectura *time.Time `json:"ultima_lectura,omitempty"`
+}
+
+// EstadoSensoresResponse es la respuesta de GET /sensores/estado.
+type EstadoSensoresResponse struct {
+	Sensores []EstadoSensor `json:"sensores"`
+}

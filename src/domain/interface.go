@@ -27,3 +27,11 @@ type LecturaRepository interface {
 type EventSubscriber interface {
 	Subscribe(ctx context.Context, usuarioID int) (<-chan []byte, func(), error)
 }
+
+// SensorStatusRepository trae, para cada sensor ligado a un lote activo del
+// usuario, la marca de tiempo de su lectura más reciente en
+// lecturas_ambientales. No decide "conectado/desconectado" — eso es una
+// regla de negocio (umbral de tiempo) que vive en application, no aquí.
+type SensorStatusRepository interface {
+	GetUltimasLecturas(ctx context.Context, usuarioID int) ([]entities.EstadoSensor, error)
+}

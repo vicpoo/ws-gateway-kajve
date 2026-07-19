@@ -8,6 +8,7 @@ import (
 
 	"github.com/kajve/ws-gateway/src/application"
 	"github.com/kajve/ws-gateway/src/infrastructure/auth"
+	"github.com/kajve/ws-gateway/src/infrastructure/httpapi"
 	"github.com/kajve/ws-gateway/src/infrastructure/redis"
 	"github.com/kajve/ws-gateway/src/infrastructure/repository"
 	wsinfra "github.com/kajve/ws-gateway/src/infrastructure/websocket"
@@ -15,10 +16,11 @@ import (
 )
 
 type Container struct {
-	Config    *Config
-	DB        *core.DB
-	Redis     *redis.Subscriber
-	WSHandler *wsinfra.Handler
+	Config              *Config
+	DB                  *core.DB
+	Redis               *redis.Subscriber
+	WSHandler           *wsinfra.Handler
+	SensorStatusHandler *httpapi.SensorStatusHandler
 }
 
 func NewContainer(ctx context.Context) (*Container, error) {
@@ -41,16 +43,21 @@ func NewContainer(ctx context.Context) (*Container, error) {
 
 	loteRepo := repository.NewLoteRepository(db)
 	lecturaRepo := repository.NewLecturaRepository(db)
+	sensorStatusRepo := repository.NewSensorStatusRepository(db)
 	validator := auth.NewValidator(cfg.JWTSecret)
 
 	gatewayService := application.NewGatewayService(loteRepo, lecturaRepo, sub, validator, cfg.HistoryLimit)
+	sensorStatusService := application.NewSensorStatusService(sensorStatusRepo, cfg.SensorOfflineThreshold)
+
 	wsHandler := wsinfra.NewHandler(gatewayService, cfg.AllowedOrigin)
+	sensorStatusHandler := httpapi.NewSensorStatusHandler(gatewayService, sensorStatusService)
 
 	return &Container{
-		Config:    cfg,
-		DB:        db,
-		Redis:     sub,
-		WSHandler: wsHandler,
+		Config:              cfg,
+		DB:                  db,
+		Redis:               sub,
+		WSHandler:           wsHandler,
+		SensorStatusHandler: sensorStatusHandler,
 	}, nil
 }
 

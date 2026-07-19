@@ -90,3 +90,15 @@ func (s *GatewayService) Historial(ctx context.Context, loteID, usuarioID int) e
 func (s *GatewayService) Suscribir(ctx context.Context, usuarioID int) (<-chan []byte, func(), error) {
 	return s.events.Subscribe(ctx, usuarioID)
 }
+
+// ValidarToken valida un JWT recibido por header Authorization (para
+// endpoints REST normales, a diferencia de Autorizar que valida el token
+// recibido por query param en el handshake de WebSocket). Devuelve el
+// id_usuario del token ya validado.
+func (s *GatewayService) ValidarToken(token string) (usuarioID int, err error) {
+	claims, err := s.validator.Validate(token)
+	if err != nil {
+		return 0, ErrTokenInvalido
+	}
+	return claims.UserID, nil
+}
