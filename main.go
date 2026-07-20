@@ -36,7 +36,7 @@ func main() {
 	}
 	defer container.Close()
 
-	router := routes.NewRouter(container.WSHandler, container.SensorStatusHandler)
+	router := routes.NewRouter(container.WSHandler, container.SensorStatusHandler, container.ResumenHandler)
 	server := &http.Server{
 		Addr:              ":" + container.Config.Port,
 		Handler:           router,

@@ -22,6 +22,7 @@ type Container struct {
 	Redis               *redis.Subscriber
 	WSHandler           *wsinfra.Handler
 	SensorStatusHandler *httpapi.SensorStatusHandler
+	ResumenHandler      *httpapi.ResumenHandler
 }
 
 func NewContainer(ctx context.Context) (*Container, error) {
@@ -52,6 +53,7 @@ func NewContainer(ctx context.Context) (*Container, error) {
 
 	wsHandler := wsinfra.NewHandler(gatewayService, cfg.AllowedOrigin)
 	sensorStatusHandler := httpapi.NewSensorStatusHandler(gatewayService, sensorStatusService)
+	resumenHandler := httpapi.NewResumenHandler(gatewayService)
 
 	return &Container{
 		Config:              cfg,
@@ -59,6 +61,7 @@ func NewContainer(ctx context.Context) (*Container, error) {
 		Redis:               sub,
 		WSHandler:           wsHandler,
 		SensorStatusHandler: sensorStatusHandler,
+		ResumenHandler:      resumenHandler,
 	}, nil
 }
 

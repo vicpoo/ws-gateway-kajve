@@ -19,6 +19,9 @@ type LoteRepository interface {
 // inicial de la gráfica al conectar.
 type LecturaRepository interface {
 	GetUltimas(ctx context.Context, loteID int, usuarioID int, limit int) ([]entities.PuntoHistorico, error)
+	// GetResumen calcula agregados (min/prom/max) sobre TODAS las lecturas
+	// del lote, para GET /lotes/{id}/resumen (ver entities.ResumenLote).
+	GetResumen(ctx context.Context, loteID int, usuarioID int) (*entities.ResumenLote, error)
 }
 
 // EventSubscriber se suscribe al canal de tiempo real de un usuario (Redis

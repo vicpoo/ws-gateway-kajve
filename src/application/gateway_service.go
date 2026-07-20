@@ -92,6 +92,14 @@ func (s *GatewayService) Suscribir(ctx context.Context, usuarioID int) (<-chan [
 	return s.events.Subscribe(ctx, usuarioID)
 }
 
+// Resumen calcula los agregados (min/prom/max) de TODAS las lecturas del
+// lote, para GET /lotes/{id}/resumen — la vista de Monitoreo. A diferencia
+// de Historial (últimas N lecturas), esto sí cubre el lote completo desde
+// que empezó.
+func (s *GatewayService) Resumen(ctx context.Context, loteID, usuarioID int) (*entities.ResumenLote, error) {
+	return s.lecturas.GetResumen(ctx, loteID, usuarioID)
+}
+
 // ValidarToken valida un JWT recibido por header Authorization (para
 // endpoints REST normales, a diferencia de Autorizar que valida el token
 // recibido por query param en el handshake de WebSocket). Devuelve el

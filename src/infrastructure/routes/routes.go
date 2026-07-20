@@ -13,7 +13,7 @@ import (
 
 // NewRouter arma las rutas del Gateway: /health, el endpoint WebSocket, y
 // los endpoints REST auxiliares (por ahora, estado de sensores).
-func NewRouter(wsHandler *wsinfra.Handler, sensorStatusHandler *httpapi.SensorStatusHandler) http.Handler {
+func NewRouter(wsHandler *wsinfra.Handler, sensorStatusHandler *httpapi.SensorStatusHandler, resumenHandler *httpapi.ResumenHandler) http.Handler {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
@@ -25,6 +25,7 @@ func NewRouter(wsHandler *wsinfra.Handler, sensorStatusHandler *httpapi.SensorSt
 
 	r.Get("/ws/lotes/{id}", wsHandler.ServeWS)
 	r.Get("/sensores/estado", sensorStatusHandler.ServeHTTP)
+	r.Get("/lotes/{id}/resumen", resumenHandler.ServeHTTP)
 
 	return r
 }

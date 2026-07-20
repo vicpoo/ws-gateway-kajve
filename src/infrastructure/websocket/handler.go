@@ -108,6 +108,11 @@ func (h *Handler) serve(conn *websocket.Conn, usuarioID, loteID int) {
 		defer cancel()
 		for {
 			if _, _, err := conn.ReadMessage(); err != nil {
+				// Antes esto se tragaba el error en silencio, así que no
+				// había forma de saber si una desconexión era el cliente
+				// cerrando limpio, la red cayéndose, o un timeout de
+				// pong. Con esto en el log queda claro cuál fue.
+				log.Printf("ws: lectura terminada (usuario=%d, lote=%d): %v", usuarioID, loteID, err)
 				return
 			}
 		}
@@ -115,27 +120,33 @@ func (h *Handler) serve(conn *websocket.Conn, usuarioID, loteID int) {
 
 	historial := h.gateway.Historial(ctx, loteID, usuarioID)
 	if err := h.writeJSON(conn, historial); err != nil {
+		log.Printf("ws: error mandando histórico (usuario=%d, lote=%d): %v", usuarioID, loteID, err)
 		return
 	}
 
 	ticker := time.NewTicker(pingPeriod)
 	defer ticker.Stop()
 
+	inicio := time.Now()
 	for {
 		select {
 		case <-ctx.Done():
+			log.Printf("ws: conexión cerrada (usuario=%d, lote=%d, duró %v)", usuarioID, loteID, time.Since(inicio))
 			return
 		case payload, ok := <-events:
 			if !ok {
+				log.Printf("ws: canal de eventos cerrado (usuario=%d, lote=%d)", usuarioID, loteID)
 				return
 			}
 			conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := conn.WriteMessage(websocket.TextMessage, payload); err != nil {
+				log.Printf("ws: error escribiendo lectura (usuario=%d, lote=%d): %v", usuarioID, loteID, err)
 				return
 			}
 		case <-ticker.C:
 			conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				log.Printf("ws: error mandando ping — el cliente probablemente ya no responde (usuario=%d, lote=%d): %v", usuarioID, loteID, err)
 				return
 			}
 		}
